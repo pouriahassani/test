@@ -83,46 +83,8 @@ static void free_fd(int fd) {
 }
 
 int axe_file_open(const char* filename, int mode) {
-    /* Validate input parameters */
-    if (!filename) {
-        return FILE_ERROR_INVALID_FD;
-    }
-    
-    /* Validate mode combinations */
-    if ((mode & FILE_MODE_EXCL) && !(mode & FILE_MODE_CREATE)) {
-        /* O_EXCL requires O_CREAT */
-        return FILE_ERROR_PERMISSION;
-    }
-    
-    if ((mode & FILE_MODE_READ) && (mode & FILE_MODE_WRITE)) {
-        /* Read-write mode: ensure we have both flags properly set */
-        if (mode & FILE_MODE_TRUNC) {
-            /* Truncate in read-write mode - valid */
-        }
-    } else if (mode & FILE_MODE_READ) {
-        /* Read-only: TRUNC and CREATE don't make sense */
-        if (mode & (FILE_MODE_TRUNC | FILE_MODE_CREATE)) {
-            display_print(0, 0, "[WARNING] axe_file_open: ignoring TRUNC/CREATE in read-only mode\n");
-            mode &= ~(FILE_MODE_TRUNC | FILE_MODE_CREATE);
-        }
-    }
-    
-    /* Display mode information for debugging */
-    display_print(0, 0, "[DEBUG] axe_file_open: ");
-    display_print(0, 0, filename);
-    display_print(0, 0, " mode=0x");
-    display_print(2, mode, "");
-    
-    if (mode & FILE_MODE_READ) display_print(0, 0, " READ");
-    if (mode & FILE_MODE_WRITE) display_print(0, 0, " WRITE");
-    if (mode & FILE_MODE_APPEND) display_print(0, 0, " APPEND");
-    if (mode & FILE_MODE_CREATE) display_print(0, 0, " CREATE");
-    if (mode & FILE_MODE_EXCL) display_print(0, 0, " EXCL");
-    if (mode & FILE_MODE_TRUNC) display_print(0, 0, " TRUNC");
-    if (mode & FILE_MODE_BINARY) display_print(0, 0, " BINARY");
-    display_print(0, 0, "\n");
-
     /* Allocate a file descriptor */  
+
     int fd = allocate_fd();
     if (fd < 0) {
         return fd;  /* Return error */
@@ -135,32 +97,24 @@ int axe_file_open(const char* filename, int mode) {
     file_params.buffer = file_handles[fd].buffer;  /* Use allocated buffer */
     file_params.size = file_handles[fd].buffer_size;
     file_params.operation_id = ((uint32_t)filename) ^ (fd << 16);  /* Unique ID */
-    file_params.result = -999;  // Initialize to known value
-    
+    file_params.result = -999;  // ✅ Initialize to known value
     /* Trigger file_open operation */
     *((volatile uint32_t*)FILE_OPEN_TRIGGER) = (uint32_t)&file_params;
-    
-    /* Wait for simulation to set result */
+          // ✅ ADD MISSING: Wait for simulation to set result
     int wait_count = 0;                                           
     while (file_params.result != fd ) {                              
         // Wait for simulation to process and set result                                                                     
         wait_count++;                                                 
         __asm__ volatile ("nop");  // Prevent compiler optimization   
     } 
-    
+    uint32_t file_name_addr = (uint32_t)(&file_params);
     /* Check result */
     if (file_params.result < 0) {
-        display_print(0, 0, "[ERROR] axe_file_open failed: ");
-        display_print(2, file_params.result, "");
-        display_print(0, 0, "\n");
         free_fd(fd);  /* Free on error */
         return file_params.result;
     }
     
     /* Success - return file descriptor */
-    display_print(0, 0, "[SUCCESS] axe_file_open: fd=");
-    display_print(2, fd, "");
-    display_print(0, 0, "\n");
     return fd;
 }
 

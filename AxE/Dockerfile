@@ -18,6 +18,7 @@ ENV WORKDIR=/home/axe
 # =============================================================================
 # SYSTEM PACKAGES WITH CLAUDE CLI SUPPORT
 # =============================================================================
+
 RUN apt-get update && apt-get install -y \
     # Build essentials
     build-essential gcc-15 g++-15 cmake \
@@ -114,12 +115,6 @@ WORKDIR $WORKDIR
 ENV PATH="/opt/riscv/bin:$WORKDIR/verilator/bin:$HOME/.local/bin:$PATH"
 ENV VERILATOR_ROOT="$WORKDIR/verilator"
 ENV RISCV="/opt/riscv"
-COPY costum_libgcc /home/axe/costum_libgcc
-RUN cp /home/axe/costum_libgcc/libgcc.a /opt/riscv/lib/gcc/riscv32-unknown-elf/15.2.0/ &&\
-    source ~/.bashrc && \
-    mv /home/axe/workspace/.vscode /home/axe/.vscode && \
-
-
 
 # Enhanced bash configuration with Claude CLI
 RUN echo '# AxE Development Environment with Claude CLI' >> ~/.bashrc && \

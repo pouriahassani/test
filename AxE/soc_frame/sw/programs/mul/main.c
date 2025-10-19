@@ -59,10 +59,9 @@ void my_main()
     printf("\npro: %d",pro);
     printf("\ny %f",y);
     // Debug atan step by step
-    void debug_atan_simple();
-    debug_atan_simple();
+
     double half = 0.5;
-    double pi = 4*atan(half);
+    double pi = 4*atan(1);
     printf("\npi %f",pi);
     printf("\nEnd of mul program\n");
     // display_print(0,0,"\ny: ");

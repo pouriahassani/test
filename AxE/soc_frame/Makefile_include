@@ -88,11 +88,10 @@ VERILATOR_FLAGS += -Wno-fatal
 VERILATOR_FLAGS += -y ../../rtl/noc/noc_connect_2x2_16
 VERILATOR_FLAGS += -y ../../rtl/file_io_detector
 VERILATOR_FLAGS += -I../../rtl
-VERILATOR_FLAGS += -I$(GENERATED_DIR)  -CFLAGS -I$(GENERATED_DIR) -CFLAGS -O3   # Include generated memory layout files + high optimization
-VERILATOR_FLAGS += -DPCPI_COUNT   # Enable PCPI counting (commented out for now)
+VERILATOR_FLAGS += -I$(GENERATED_DIR)  -CFLAGS -I$(GENERATED_DIR) -CFLAGS -O0   # Include generated memory layout files + debug symbols
 
 
-VERILATOR_FLAGS += # --stats #--trace #-g --debug 
+VERILATOR_FLAGS +=   #--trace #-g --debug 
 
 ######################################################################
 # 

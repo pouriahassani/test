@@ -13,7 +13,6 @@
 #include <sys/stat.h>
 #include <sys/times.h>
 #include <time.h>
-#include "memmgr.h"
 
 //----------------------------------------------------------------
 // AxE Display System Functions

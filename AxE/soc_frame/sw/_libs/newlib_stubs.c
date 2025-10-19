@@ -171,7 +171,7 @@ int _read(int file, char *ptr, int len) {
     return -1;
 }
 
-// 4. _open - Open file with comprehensive POSIX flag support
+// 4. _open - Open file
 int _open(const char *name, int flags, int mode) {
     // Convert POSIX flags to AxE file modes
     int axe_mode = 0;
@@ -180,40 +180,16 @@ int _open(const char *name, int flags, int mode) {
     int access_mode = flags & O_ACCMODE;
     
     if (access_mode == O_RDONLY) {
-        axe_mode |= FILE_MODE_READ;
+        axe_mode = FILE_MODE_READ;
     } else if (access_mode == O_WRONLY) {
-        axe_mode |= FILE_MODE_WRITE;
+        axe_mode = FILE_MODE_WRITE;
     } else if (access_mode == O_RDWR) {
-        axe_mode |= FILE_MODE_READ | FILE_MODE_WRITE;
-    }
-    
-    // Handle creation and truncation flags
-    if (flags & O_CREAT) {
-        axe_mode |= FILE_MODE_CREATE;
-    }
-    
-    if (flags & O_EXCL) {
-        axe_mode |= FILE_MODE_EXCL;
-    }
-    
-    if (flags & O_TRUNC) {
-        axe_mode |= FILE_MODE_TRUNC;
+        axe_mode = FILE_MODE_READ | FILE_MODE_WRITE;
     }
     
     if (flags & O_APPEND) {
         axe_mode |= FILE_MODE_APPEND;
     }
-    
-    // Always enable binary mode for embedded systems (no text conversion)
-    axe_mode |= FILE_MODE_BINARY;
-    
-    display_print(0, 0, "[DEBUG] _open: ");
-    display_print(0, 0, name);
-    display_print(0, 0, " flags=0x");
-    display_print(2, flags, "");
-    display_print(0, 0, " axe_mode=0x");
-    display_print(2, axe_mode, "");
-    display_print(0, 0, "\n");
     
     return axe_file_open(name, axe_mode);
 }

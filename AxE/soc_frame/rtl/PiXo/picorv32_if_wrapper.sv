@@ -11,7 +11,7 @@
 
 // this module is just a wrapper to enable a pico to be connected via the
 // AXI interface.
-// PCPI_COUNT is now controlled via command line -DPCPI_COUNT
+
 module picorv32_if_wrapper
 #(
          parameter NODE_ID = 0,
@@ -29,16 +29,6 @@ module picorv32_if_wrapper
     ,output trap
     
     ,if_axi_light.master  m_axi
-    `ifdef PCPI_COUNT
-    ,output reg[63:0] intmul_count,
-    output reg [63:0] intdiv_count,
-    output reg [63:0] fpadd_count,
-    output reg [63:0] fpsub_count,
-    output reg [63:0] intmulx_count,
-    output reg [63:0] fpmul_count,
-    output reg [63:0] fpdiv_count,
-    output reg [63:0] fpmulx_count
-    `endif
 );
     
 //    assign trap = 1'b0;
@@ -104,16 +94,6 @@ module picorv32_if_wrapper
         // Trace Interface
         ,.trace_valid()
         ,.trace_data()
-        `ifdef PCPI_COUNT
-        ,.intmul_count (intmul_count )
-        ,.intdiv_count (intdiv_count )
-        ,.fpadd_count  (fpadd_count  )
-        ,.fpsub_count  (fpsub_count  )
-        ,.intmulx_count(intmulx_count)
-        ,.fpmul_count  (fpmul_count  )
-        ,.fpdiv_count  (fpdiv_count  )
-        ,.fpmulx_count (fpmulx_count )
-        `endif
     );
     
 endmodule

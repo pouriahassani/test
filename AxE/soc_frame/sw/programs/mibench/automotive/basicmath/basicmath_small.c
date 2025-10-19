@@ -17,7 +17,24 @@ int my_main(void)
   unsigned long l = 0x3fed0169L;
   struct int_sqrt q;
   long n = 0;
-
+   double zero = 0.0;
+    double one = 1.0;
+    double two = 2.0;
+    
+    printf("Constants: zero=%f, one=%f, two=%f\n", zero, one, two);
+    
+    // Test 2: Test atan with 0 (should be 0)
+    double atan_0 = atan(zero);
+    printf("atan(0) = %f\n", atan_0);
+    
+    // Test 3: Test atan with 1 (should be ~0.785)
+    double atan_1 = atan(one);
+    printf("atan(1) = %f\n", atan_1);
+    
+    // Test 4: Multiply by 4
+    double pi_calc = 4.0 * atan_1;
+    printf("4 * atan(1) = %f\n", pi_calc);
+  printf("\nvalude of pi %f\n",PI);
   /* solve soem cubic functions */
   printf("********* CUBIC FUNCTIONS ***********\n");
   printf("Testing first cubic equation (should get 3 solutions: 2, 6 & 2.5)\n");

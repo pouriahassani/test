@@ -8,7 +8,7 @@
   Copyright (C) 2019 Stefan Huemer <stefan@huemer.tech>
   
 ***************************************************************************** */
-// PCPI_COUNT is now controlled via command line -DPCPI_COUNT
+
 module node #(
      parameter ID = 0
     
@@ -89,16 +89,6 @@ module node #(
         ,.current_pc_for_sim(current_pc_for_sim)
         ,.mem_instr_for_sim (mem_instr_for_sim)
         ,.m_axi( if_axi_light_cpu_to_detector.master )
-        `ifdef PCPI_COUNT
-        ,.intmul_count (intmul_count )
-        ,.intdiv_count (intdiv_count )
-        ,.fpadd_count  (fpadd_count  )
-        ,.fpsub_count  (fpsub_count  )
-        ,.intmulx_count(intmulx_count)
-        ,.fpmul_count  (fpmul_count  )
-        ,.fpdiv_count  (fpdiv_count  )
-        ,.fpmulx_count (fpmulx_count )
-        `endif
     );
     
     // -------------------------------------------------------------------------
@@ -199,16 +189,6 @@ module node #(
         ,.fin( w_fin )
         
         ,.m_axi( if_axi_light_self_awareness_to_mux.master )
-        `ifdef PCPI_COUNT
-        ,.intmul_count (intmul_count )
-        ,.intdiv_count (intdiv_count )
-        ,.fpadd_count  (fpadd_count  )
-        ,.fpsub_count  (fpsub_count  )
-        ,.intmulx_count(intmulx_count)
-        ,.fpmul_count  (fpmul_count  )
-        ,.fpdiv_count  (fpdiv_count  )
-        ,.fpmulx_count (fpmulx_count )
-        `endif
     );
     
     // -------------------------------------------------------------------------

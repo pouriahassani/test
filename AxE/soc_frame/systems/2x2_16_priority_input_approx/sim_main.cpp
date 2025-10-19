@@ -204,7 +204,6 @@ void handle_file_operation(int node_id, uint32_t operation, uint32_t param0,
             
             write_word_to_memory(param0 + 20, host_files[handle].is_open ? handle : -1);
             break;
-            VL_PRINTF("****Opened file '%s' with handle %d (mode %d)\n", filename.c_str(), handle, mode);
         }
         
         case FILE_READ_OP: {

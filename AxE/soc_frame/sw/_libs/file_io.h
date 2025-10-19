@@ -4,6 +4,12 @@
 #include <stdint.h>
 // #include <stddef.h>
 
+// Define uint32_t if not already defined
+#ifndef _uint32_t_DEFINED
+#define _uint32_t_DEFINED
+typedef uint32_t __uint32_t;
+#endif
+
 /**
  * @file file_io.h
  * @brief Host-based file I/O API for AxE SoC platform
@@ -13,31 +19,17 @@
  * File operations are handled by the Verilator simulation environment.
  */
 
-/* File operation modes - Enhanced POSIX support */
-#define FILE_MODE_READ     0x01   /* Read access */
-#define FILE_MODE_WRITE    0x02   /* Write access */
-#define FILE_MODE_APPEND   0x04   /* Append mode - write at end */
-#define FILE_MODE_CREATE   0x08   /* O_CREAT - create if doesn't exist */
-#define FILE_MODE_EXCL     0x10   /* O_EXCL - fail if file exists with O_CREAT */
-#define FILE_MODE_TRUNC    0x20   /* O_TRUNC - truncate existing file to zero */
-#define FILE_MODE_BINARY   0x40   /* Binary mode (no text conversion) */
+/* File operation modes */
+#define FILE_MODE_READ    1
+#define FILE_MODE_WRITE   2
+#define FILE_MODE_APPEND  4
 
-/* Convenience combinations for common patterns */
-#define FILE_MODE_READ_ONLY    (FILE_MODE_READ | FILE_MODE_BINARY)
-#define FILE_MODE_WRITE_NEW    (FILE_MODE_WRITE | FILE_MODE_CREATE | FILE_MODE_TRUNC | FILE_MODE_BINARY)
-#define FILE_MODE_WRITE_APPEND (FILE_MODE_WRITE | FILE_MODE_APPEND | FILE_MODE_CREATE | FILE_MODE_BINARY)
-#define FILE_MODE_READ_WRITE   (FILE_MODE_READ | FILE_MODE_WRITE | FILE_MODE_BINARY)
-
-/* Error codes - Enhanced for comprehensive file operations */
-#define FILE_SUCCESS              0
-#define FILE_ERROR_INVALID_FD     -1   /* Invalid file descriptor */
-#define FILE_ERROR_FILE_NOT_FOUND -2   /* File doesn't exist (and CREATE not set) */
-#define FILE_ERROR_PERMISSION     -3   /* Permission denied or invalid mode combination */
-#define FILE_ERROR_NO_SPACE       -4   /* No free file descriptors or disk space */
-#define FILE_ERROR_FILE_EXISTS    -5   /* File exists (with EXCL flag) */
-#define FILE_ERROR_INVALID_MODE   -6   /* Invalid mode combination */
-#define FILE_ERROR_IO_ERROR       -7   /* General I/O error */
-#define FILE_ERROR_TRUNCATE_FAIL  -8   /* Failed to truncate file */
+/* Error codes */
+#define FILE_SUCCESS      0
+#define FILE_ERROR_INVALID_FD     -1
+#define FILE_ERROR_FILE_NOT_FOUND -2
+#define FILE_ERROR_PERMISSION     -3
+#define FILE_ERROR_NO_SPACE       -4
 
 /* Include generated memory layout configuration */
 #include "axe_memory_layout.h"

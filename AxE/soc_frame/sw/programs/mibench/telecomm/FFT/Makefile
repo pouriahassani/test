@@ -1,8 +1,15 @@
-SRC = main.c fftmisc.c fourierf.c ../../../../_libs/memmgr.c ../../../../_libs/newlib_stubs.c ../../../../_libs/file_io.c
-LINKEDLIBS = -lm -lc
-# Force full newlib (not nano) and enable float printf support
-CFLAGS += -u _printf_float -Wno-implicit-int -Wno-old-style-definition -Wno-return-type
-include ./Makefile_local
+OBJ = main.o fftmisc.o  fourierf.o
+FILE = main.c fftmisc.c  fourierf.c
+CFLAGS = -static -O3 -g
+
+fft: ${OBJ} Makefile
+	gcc  ${CFLAGS} ${OBJ} -o fft -lm
+fftmisc.o: fftmisc.c
+	gcc ${CFLAGS} -c fftmisc.c
+fourierf.o: fourierf.c
+	gcc ${CFLAGS} -c fourierf.c
+main.o: main.c
+	gcc ${CFLAGS} -c main.c
 
 clean:
-	rm -rf fft output* rv32* *.txt
+	rm -rf *.o fft output*

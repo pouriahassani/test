@@ -36,7 +36,7 @@
 `else
 	`define fp_count(debug_command)
 `endif
-// PCPI_COUNT is now controlled via command line -DPCPI_COUNT
+
 `ifdef INT_MUL_COUNT
 	`define int_mul_count(debug_command) debug_command
 `else
@@ -173,18 +173,6 @@ module picorv32 #(
 	// Trace Interface
 	output reg        trace_valid,
 	output reg [35:0] trace_data
-`ifdef PCPI_COUNT
-		,
-		output reg [63:0]fpmul_count,
-		output reg [63:0]fpadd_count,
-		output reg [63:0]fpsub_count,
-		output reg [63:0]fpdiv_count,
-		output reg [63:0]intmul_count,
-		output reg [63:0]intdiv_count,
-		output reg [63:0]intmulx_count,
-		output reg [63:0]fpmulx_count
-
-`endif
 );
 	localparam integer irq_timer = 0;
 	localparam integer irq_ebreak = 1;
@@ -341,9 +329,6 @@ module picorv32 #(
 	    .pcpi_rd   (pcpi_mul_approx_rd    ),
 	    .pcpi_wait (pcpi_mul_approx_wait  ),
 	    .pcpi_ready(pcpi_mul_approx_ready )
-		`ifdef PCPI_COUNT
-		,.intmulx_count(intmulx_count)
-		`endif		
 	);
 
 	picorv32_pcpi_fpadd pcpi_fpadd (
@@ -357,9 +342,6 @@ module picorv32 #(
 	    .pcpi_rd(pcpi_fpadd_rd),
 	    .pcpi_wait(pcpi_fpadd_wait),
 	    .pcpi_ready(pcpi_fpadd_ready)
-		`ifdef PCPI_COUNT
-		,.fpadd_count(fpadd_count)
-		`endif
 	);	
 
 	picorv32_pcpi_fpsub pcpi_fpsub (
@@ -373,9 +355,6 @@ module picorv32 #(
 	    .pcpi_rd(pcpi_fpsub_rd),
 	    .pcpi_wait(pcpi_fpsub_wait),
 	    .pcpi_ready(pcpi_fpsub_ready)
-		`ifdef PCPI_COUNT
-		,.fpsub_count(fpsub_count)
-		`endif
 	);
 		picorv32_pcpi_flag pcpi_flag (
 	    .clk(clk),
@@ -407,9 +386,6 @@ module picorv32 #(
 	    .pcpi_rd(pcpi_fpmul_rd),
 	    .pcpi_wait(pcpi_fpmul_wait),
 	    .pcpi_ready(pcpi_fpmul_ready)
-		`ifdef PCPI_COUNT
-		,.fpmul_count(fpmul_count)
-		`endif
 	);
 
 	picorv32_pcpi_fpmul_approx pcpi_fpmul_approx (
@@ -423,9 +399,6 @@ module picorv32 #(
 	    .pcpi_rd(pcpi_fpmul_approx_rd),
 	    .pcpi_wait(pcpi_fpmul_approx_wait),
 	    .pcpi_ready(pcpi_fpmul_approx_ready)
-		`ifdef PCPI_COUNT
-		,.fpmulx_count(fpmulx_count)
-		`endif
 	);
 
 	picorv32_pcpi_fpdiv pcpi_fpdiv (
@@ -439,9 +412,6 @@ module picorv32 #(
 	    .pcpi_rd(pcpi_fpdiv_rd),
 	    .pcpi_wait(pcpi_fpdiv_wait),
 	    .pcpi_ready(pcpi_fpdiv_ready)
-		`ifdef PCPI_COUNT
-		,.fpdiv_count(fpdiv_count)
-		`endif
 	);	
 
 
@@ -472,10 +442,6 @@ module picorv32 #(
 			.pcpi_rd   (pcpi_mul_rd    ),
 			.pcpi_wait (pcpi_mul_wait  ),
 			.pcpi_ready(pcpi_mul_ready )
-			`ifdef PCPI_COUNT
-			,.intmul_count(intmul_count)
-			`endif
-
 		);
 	end else begin
 		assign pcpi_mul_wr = 0;
@@ -496,9 +462,6 @@ module picorv32 #(
 			.pcpi_rd   (pcpi_div_rd    ),
 			.pcpi_wait (pcpi_div_wait  ),
 			.pcpi_ready(pcpi_div_ready )
-			`ifdef PCPI_COUNT
-			,.intdiv_count(intdiv_count)
-			`endif
 		);
 	end else begin
 		assign pcpi_div_wr = 0;
@@ -2380,6 +2343,29 @@ module picorv32 #(
 		end
 	end
 `endif
+reg [5:0] pcpi_counter; // Assuming you need a 32-bit counter
+always @(posedge clk) begin
+	// $display("current_pc is %d",next_pc);
+	if (!pcpi_valid)
+		pcpi_counter <= 0; // Reset the counter when pcpi_valid is low
+	else begin
+		pcpi_counter <= pcpi_counter + 1; // Increment the counter when pcpi_valid is high
+		// if(pcpi_fpadd_ready)
+		// 	$display("pcpi_counter for fpadd is : %d",pcpi_counter);
+		// if(pcpi_fpsub_ready)
+		// 	$display("pcpi_counter for fpsub is : %d",pcpi_counter);
+		// if(pcpi_fpmul_ready)
+		// 	$display("pcpi_counter for fpmul is : %d",pcpi_counter);
+		// if(pcpi_fpdiv_ready)
+		// 	$display("pcpi_counter for fpdiv is : %d",pcpi_counter);
+		// 	// $display("pcpi_counter is : %d AND pcpi_mul_ready %d and pcpi_int_ready %d %d %d %d %d %d %d %d %d %d", pcpi_counter,pcpi_mul_ready,pcpi_int_ready,
+		// 	// ENABLE_PCPI && pcpi_ready, (ENABLE_MUL || ENABLE_FAST_MUL) && pcpi_mul_ready, ENABLE_DIV && pcpi_div_ready 
+		// 	// , pcpi_mul_approx_ready, pcpi_fpmul_ready, pcpi_fpmul_approx_ready, pcpi_fpdiv_ready, pcpi_fpadd_ready, pcpi_fpsub_ready); // Display the counter value
+		// 	$display("pcpi_counter is : %d AND pcpi_mul_ready %d and pcpi_int_ready %d %d %d %d %d %d %d %d %d %d", pcpi_counter,pcpi_mul_ready,pcpi_int_ready,
+		// 	 ENABLE_DIV && pcpi_div_ready); // Display the counter value
+	end
+end
+
 endmodule
 
 // This is a simple example implementation of PICORV32_REGS.
@@ -2424,9 +2410,6 @@ module picorv32_pcpi_mul #(
 	output reg [31:0] pcpi_rd,
 	output reg        pcpi_wait,
 	output reg        pcpi_ready
-	`ifdef PCPI_COUNT
-	,output reg[63:0]intmul_count
-	`endif
 );
 	reg instr_mul, instr_mulh, instr_mulhsu, instr_mulhu;
 	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu};
@@ -2537,16 +2520,10 @@ module picorv32_pcpi_mul #(
 	always @(posedge clk) begin
 		pcpi_wr <= 0;
 		pcpi_ready <= 0;
-		`ifdef PCPI_COUNT
-		intmul_count <= 0;
-		`endif
 		if (mul_finish && resetn) begin
 			//$display("ACTIVE: couter is : %d picorv32_pcpi_mul rs1 %d rs2 %d pcpi_valid %d pcpi_ready %d pcpi_wr %d pcpi_rd %d",
 			//counter,pcpi_rs1,pcpi_rs2,pcpi_valid,pcpi_ready,pcpi_wr,pcpi_rd);
 			`int_mul_count($display("\nMUL called");)
-			`ifdef PCPI_COUNT
-			intmul_count <= intmul_count + 1;
-			`endif
 			pcpi_wr <= 1;
 			pcpi_ready <= 1;
 			pcpi_rd <= instr_any_mulh ? rd >> 32 : rd;
@@ -2667,9 +2644,6 @@ module picorv32_pcpi_mul_approx (
         output reg [31:0] pcpi_rd,
         output reg        pcpi_wait,
         output reg        pcpi_ready
-		`ifdef PCPI_COUNT
-		,output reg [31:0] intmulx_count
-		`endif
 );
 		//TODO: I changed the opcode required here from all ones to some trash, CHANGE back! 
         wire active = pcpi_valid && pcpi_insn[6:0] == 7'b1111111 && pcpi_insn[31:25] == 7'b1111111;
@@ -2687,10 +2661,6 @@ module picorv32_pcpi_mul_approx (
                 pcpi_ready <= 0;
                 pcpi_wr <= 0;
                 pcpi_wait <= 0;
-				`ifdef PCPI_COUNT
-				if (!resetn) 
-				intmulx_count <= 0;
-				`endif
 				// `ifdef DEBUG
                 // 		$display("I am in approx mul clk");
                 // `endif
@@ -2698,9 +2668,6 @@ module picorv32_pcpi_mul_approx (
 						// $display("ACTIVE: picorv32_pcpi_mul_approx");
                         pcpi_ready <= 1;
                         pcpi_wr <= 1;
-						`ifdef PCPI_COUNT
-						intmulx_count <= intmulx_count + 1;
-						`endif
                         //~ pcpi_rd <= pcpi_rs1 * pcpi_rs2;
                 end
         end
@@ -3001,9 +2968,6 @@ module picorv32_pcpi_fpmul(
         output reg [31:0] pcpi_rd,
         output reg        pcpi_wait,
         output reg        pcpi_ready
-		`ifdef PCPI_COUNT
-		, output reg [64:0] fpmul_count
-		`endif
 	);
 
   //Internal variables
@@ -3039,11 +3003,7 @@ module picorv32_pcpi_fpmul(
 
   always @(posedge clk)
   begin
-	`ifdef PCPI_COUNT
-	if (!resetn) begin
-	  fpmul_count <= 0;
-	end
-	`endif
+
     case(state)
 
       get_operands:
@@ -3243,9 +3203,6 @@ module picorv32_pcpi_fpmul(
 		//   $display("FPMUL Completed.");
 		//   $display("FPMUL internal input a: %h, internal input b: %h, external output z (s_output_z <= z;): %h, internal output z: %h", a, b, s_output_z, z);
 		  `fp_count($display("\nFPMUL called");)
-		  `ifdef PCPI_COUNT
-		  	fpmul_count <= fpmul_count + 1;
-		  `endif
           s_output_z_stb <= 0;
 		  pcpi_wr <= 0;
 		  pcpi_ready <= 0;
@@ -3288,9 +3245,6 @@ module picorv32_pcpi_fpmul_approx (
         output reg [31:0] pcpi_rd,
         output reg        pcpi_wait,
         output reg        pcpi_ready
-		`ifdef PCPI_COUNT
-		, output reg [63:0] fpmulx_count
-		`endif
 );
           //Internal variables
   		// custom instruction (R-Type) for invoking an Approximate Floating Point Multiplication (using DTCL) on a PCPI Co-Processor
@@ -3307,19 +3261,12 @@ module picorv32_pcpi_fpmul_approx (
                 pcpi_ready <= 0;
                 pcpi_wr <= 0;
                 pcpi_wait <= 0;
-				`ifdef PCPI_COUNT
-				if (!resetn) begin
-				fpmulx_count <= 0;
-				end
-				`endif
+
 				if (active) begin
 						// $display("ACTIVE: picorv32_pcpi_fpmul_approx");
                         pcpi_ready <= 1;
                         pcpi_wr <= 1;
 						`fp_count($display("FPMUL_APPROX Completed.");)
-						`ifdef PCPI_COUNT
-							fpmulx_count <= fpmulx_count + 1;
-						`endif
 						// $display("FPMUL_APPROX input a: %h, input b: %h, external output z: %h", pcpi_rs1, pcpi_rs2, pcpi_rd);
                 end
         end
@@ -3346,10 +3293,7 @@ module picorv32_pcpi_fpdiv(
         output	reg [31:0] pcpi_rd,
         output	reg pcpi_wr,
 		output 	reg pcpi_wait,
-		output 	reg pcpi_ready
-		`ifdef PCPI_COUNT
-		, output reg [63:0] fpdiv_count
-		`endif);
+		output 	reg pcpi_ready);
 		
 
 
@@ -3387,11 +3331,7 @@ module picorv32_pcpi_fpdiv(
 
   always @(posedge clk)
   begin
-	`ifdef PCPI_COUNT
-	if (!resetn) begin
-	  fpdiv_count <= 0;
-	end
-	`endif
+
     case(state)
 
       get_operands:
@@ -3622,9 +3562,6 @@ module picorv32_pcpi_fpdiv(
 		pcpi_rd <= z;
         if (s_output_z_stb) begin
 	      `fp_count($display("\nFPDIV called");)
-		  `ifdef PCPI_COUNT
-		  	fpdiv_count <= fpdiv_count + 1;
-		  `endif
 		//   $display("FPDIV input a: %h, input b: %h, output z: %h", pcpi_rs1, pcpi_rs2, s_output_z);
 		
 		pcpi_wr <= 0;
@@ -3669,10 +3606,7 @@ module picorv32_pcpi_fpadd(
         output	reg [31:0] pcpi_rd,
         output	reg pcpi_wr,
 		output 	reg pcpi_wait,
-		output 	reg pcpi_ready
-		`ifdef PCPI_COUNT
-		, output reg [63:0] fpadd_count
-		`endif);
+		output 	reg pcpi_ready);
 		
   //Internal variables
   // custom instruction (R-Type) for invoking a Floating Point Addition on a PCPI Co-Processor
@@ -3713,11 +3647,7 @@ wire active = pcpi_valid && pcpi_insn[6:0] == 7'b0110011 &&  pcpi_insn[14:12] ==
 	 //$display("pcpi_rs2: %b", pcpi_rs2);
 	 //$display("resetn: %b", resetn);
 	 //$display("fpadd pcpi_ready: %b", pcpi_ready);
-	`ifdef PCPI_COUNT
-	if (!resetn) begin
-	  fpadd_count <= 0;
-	end
-	`endif
+    
 	case(state)
 
       get_operands:
@@ -3929,9 +3859,6 @@ wire active = pcpi_valid && pcpi_insn[6:0] == 7'b0110011 &&  pcpi_insn[14:12] ==
 		  pcpi_ready <= 0; //TODO: check if this is correct placement
 	  	//   pcpi_wait <= 0;
 		  `fp_count($display("\nFPADD called");)
-		  `ifdef PCPI_COUNT
-		  	fpadd_count <= fpadd_count + 1;
-		  `endif
 		  pcpi_wr <= 0;
 		  state <= get_operands;
         end
@@ -4135,10 +4062,7 @@ module picorv32_pcpi_fpsub(
         output	reg [31:0] pcpi_rd,
         output	reg pcpi_wr,
 		output 	reg pcpi_wait,
-		output 	reg pcpi_ready
-		`ifdef PCPI_COUNT
-		, output reg [63:0] fpsub_count
-		`endif);
+		output 	reg pcpi_ready);
 		
   //Internal variables
   // custom instruction (R-Type) for invoking a Floating Point Substraction on a PCPI Co-Processor
@@ -4176,11 +4100,7 @@ wire active = pcpi_valid && pcpi_insn[6:0] == 7'b0110011 &&  pcpi_insn[14:12] ==
 	// $display("pcpi_rs1: %b", pcpi_rs1);
 	// $display("pcpi_rs2: %b", pcpi_rs2);
 	// $display("resetn: %b", resetn);
-    	`ifdef PCPI_COUNT
-	if (!resetn) begin
-	  fpsub_count <= 0;
-	end
-	`endif
+    
 	case(state)
 
       get_operands:
@@ -4390,9 +4310,6 @@ wire active = pcpi_valid && pcpi_insn[6:0] == 7'b0110011 &&  pcpi_insn[14:12] ==
 		pcpi_rd <= z;
         if (s_output_z_stb) begin
 		   `fp_count($display("\nFPSUB called");)
-		   `ifdef PCPI_COUNT
-		   	fpsub_count <= fpsub_count + 1;	
-			`endif
 		   pcpi_wr <= 0;
 		   pcpi_ready <= 0;
           s_output_z_stb <= 0;
@@ -4437,9 +4354,6 @@ module picorv32_pcpi_div (
 	output reg [31:0] pcpi_rd,
 	output reg        pcpi_wait,
 	output reg        pcpi_ready
-	`ifdef PCPI_COUNT
-	, output reg [63:0] intdiv_count
-	`endif
 );
 	reg instr_div, instr_divu, instr_rem, instr_remu;
 	wire instr_any_div_rem = |{instr_div, instr_divu, instr_rem, instr_remu};
@@ -4452,11 +4366,7 @@ module picorv32_pcpi_div (
 		instr_divu <= 0;
 		instr_rem <= 0;
 		instr_remu <= 0;
-		`ifdef PCPI_COUNT
-		if (!resetn) begin
-		intdiv_count <= 0;
-		end
-		`endif
+
 		if (resetn && pcpi_valid && !pcpi_ready && pcpi_insn[6:0] == 7'b0110011 && pcpi_insn[31:25] == 7'b0000001) begin
 			case (pcpi_insn[14:12])
 				3'b100: instr_div <= 1;
@@ -4498,9 +4408,6 @@ module picorv32_pcpi_div (
 			running <= 0;
 			pcpi_ready <= 1;
 			pcpi_wr <= 1;
-			`ifdef PCPI_COUNT
-				intdiv_count <= intdiv_count + 1;
-			`endif
 `ifdef RISCV_FORMAL_ALTOPS
 			case (1)
 				instr_div:  pcpi_rd <= (pcpi_rs1 - pcpi_rs2) ^ 32'h7f8529ec;
@@ -4630,17 +4537,6 @@ module picorv32_axi #(
 	// Trace Interface
 	output        trace_valid,
 	output [35:0] trace_data
-	`ifdef PCPI_COUNT
-		,
-		output reg [63:0]fpmul_count,
-		output reg [63:0]fpadd_count,
-		output reg [63:0]fpsub_count,
-		output reg [63:0]fpdiv_count,
-		output reg [63:0]intmul_count,
-		output reg [63:0]intdiv_count,
-		output reg [63:0]intmulx_count,
-		output reg [63:0]fpmulx_count
-	`endif
 );
 	wire        mem_valid;
 	wire [31:0] mem_addr;
@@ -4756,17 +4652,6 @@ module picorv32_axi #(
 
 		.trace_valid(trace_valid),
 		.trace_data (trace_data)
-`ifdef PCPI_COUNT
-	,
-	.fpmul_count(fpmul_count),
-	.fpadd_count(fpadd_count),
-	.fpsub_count(fpsub_count),
-	.fpdiv_count(fpdiv_count),
-	.intmul_count(intmul_count),
-	.intdiv_count(intdiv_count),
-	.intmulx_count(intmulx_count),
-	.fpmulx_count(fpmulx_count)
-`endif
 	);
 endmodule
 

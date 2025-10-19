@@ -9,7 +9,6 @@
   
 ***************************************************************************** */
 `define DEBUG_SELF_AWARENESS
-// PCPI_COUNT is now controlled via command line -DPCPI_COUNT
 module self_awareness
 #(
      parameter ID = 0
@@ -27,16 +26,6 @@ module self_awareness
     ,input fin
     
     ,if_axi_light.master  m_axi
-    `ifdef PCPI_COUNT
-    ,input [63:0] intmul_count
-    ,input [63:0] intdiv_count
-    ,input [63:0] fpadd_count
-    ,input [63:0] fpsub_count
-    ,input [63:0] intmulx_count
-    ,input [63:0] fpmul_count
-    ,input [63:0] fpdiv_count
-    ,input [63:0] fpmulx_count
-    `endif
 );
 
 //~ (* mark_debug = "true" *) enum
@@ -205,11 +194,6 @@ begin : self_awareness_proc
                 `ifdef DEBUG_SELF_AWARENESS                        
                     $display( "SELF_AWARENESS: FIN" );   
                     $display( "\nNumber of busy cycles of node %d: %0d\n",ID, $unsigned(busy_counter));                        
-                `endif
-                `ifdef PCPI_COUNT
-                    $display( "PCPI counts: intmul %0d, intdiv %0d, fpadd %0d, fpsub %0d, intmulx %0d, fpmul %0d, fpdiv %0d, fpmulx %0d", 
-                        intmul_count, intdiv_count, fpadd_count, fpsub_count,
-                        intmulx_count, fpmul_count, fpdiv_count, fpmulx_count );
                 `endif
                 
                 activate = 1'b0;
