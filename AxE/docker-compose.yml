@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  axe-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: axe:dev-claude
+    container_name: axe-development
+    
+    # FIXED: Mount to /home/axe (unified workspace)
+    volumes:
+      - .:/home/axe
+      - ~/.ssh:/home/axe/.ssh:ro
+      - ~/.gitconfig:/home/axe/.gitconfig:ro
+    
+    stdin_open: true
+    tty: true
+    
+    # Port forwarding
+    ports:
+      - "8888:8888"
+      - "3000:3000"
+      - "8080:8080"
+    
+    working_dir: /home/axe
+    user: axe
+    restart: unless-stopped

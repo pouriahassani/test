@@ -1,0 +1,8 @@
+# AxE SoC Memory Layout Variables (Auto-generated)
+# DO NOT EDIT MANUALLY - Changes will be overwritten
+
+STACK_POINTER = 0x01E00000
+STACK_SIZE = 0x00100000
+
+MEM_SIZE = 33554432
+PHYSICAL_MEMORY_SIZE = 0x02000000

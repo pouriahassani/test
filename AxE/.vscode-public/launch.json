@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "AxE: Complete Partitioning Analysis",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Complete_partitioning/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/Complete_partitioning",
+            "args": []
+        },
+        {
+            "name": "AxE: Divided Partitioning Analysis",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Divided_Partitioning/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/Divided_Partitioning",
+            "args": []
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+b sim_main.cpp:158
+run
+c
+print *top
+print top->sim_file_op_complete_0
+print top->file_instr_valid_0
+c
+print top->sim_file_op_complete_0
+print top->file_instr_valid_0
+bt

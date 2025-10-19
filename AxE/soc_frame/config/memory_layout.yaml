@@ -1,0 +1,80 @@
+memory_layout:
+  program:
+    base: 0
+    size: 1048576
+    description: Program code and constants (1MB)
+  data:
+    base: 1052672
+    size: 8388608
+    description: Program data and heap (8MB for malloc)
+  file_io:
+    base: 9445376
+    size: 8392704
+    max_files: 4
+    buffer_size: 2097152
+    description: File I/O memory region (8MB + 4KB for files + structures)
+  mmio:
+    base: 17842176
+    size: 1048576
+    file_triggers:
+      base: 17842176
+      size: 4096
+    uart:
+      base: 17846272
+      size: 4096
+    debug:
+      base: 17850368
+      size: 4096
+    custom:
+      base: 17854464
+      size: 1036288
+  finish_signal:
+    address: 18890748
+    description: Program termination signal address
+  stack:
+    base: 31457280
+    size: 1048576
+    description: Program stack (grows downward from base)
+validation:
+  min_gap_program_data: 4096
+  min_gap_data_file_io: 4096
+  min_gap_file_io_mmio: 4096
+  min_gap_mmio_stack: 4096
+  max_program_size: 61440
+  max_data_size: 61440
+  max_file_io_size: 983040
+  max_stack_size: 15728640
+  alignment_program: 4096
+  alignment_data: 4096
+  alignment_file_io: 4096
+  alignment_mmio: 4096
+  alignment_stack: 4096
+hardware:
+  physical_memory_size: 33554432
+  axi_offset_step: 33554432
+  verilator_mem_size: 134217728
+applications:
+  file_intensive:
+    file_io:
+      size: 262144
+      max_files: 64
+      buffer_size: 4096
+    stack:
+      base: 15728640
+  compute_intensive:
+    stack:
+      size: 2097152
+      base: 14680064
+    data:
+      size: 131072
+  minimal:
+    program:
+      size: 16384
+    data:
+      size: 8192
+    file_io:
+      size: 16384
+      max_files: 4
+    stack:
+      size: 32768
+      base: 196608

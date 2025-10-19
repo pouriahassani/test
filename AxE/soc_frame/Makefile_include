@@ -1,0 +1,131 @@
+######################################################################
+#
+# DESCRIPTION: Verilator Example: Small Makefile
+#
+# This calls the object directory makefile.  That allows the objects to
+# be placed in the "current directory" which simplifies the Makefile.
+#
+# Copyright 2003-2019 by Wilson Snyder. This program is free software; you can
+# redistribute it and/or modify it under the terms of either the GNU
+# Lesser General Public License Version 3 or the Perl Artistic License
+# Set environment variables for RTL path management
+export AXE_ROOT := $(shell pwd | sed 's|/soc_frame.*||')
+export SOC_FRAME_ROOT := $(AXE_ROOT)/soc_frame
+# Memory layout configuration system
+MEMORY_CONFIG ?= $(SOC_FRAME_ROOT)/config/memory_layout.yaml
+APP_CONFIG ?= 
+GENERATED_DIR = $(SOC_FRAME_ROOT)/generated
+
+
+.DEFAULT_GOAL := all
+.PHONY: all generate-memory-config compile run wave clean test-paths
+
+all: generate-memory-config compile
+
+
+
+# Generate memory layout files before building
+generate-memory-config:
+	@echo "Generating memory layout configuration..."
+	@mkdir -p $(GENERATED_DIR)
+	@python3 $(SOC_FRAME_ROOT)/tools/memory_layout_validator.py $(MEMORY_CONFIG) --output-dir $(GENERATED_DIR) $(if $(APP_CONFIG),--app-config $(APP_CONFIG))
+
+# Include generated memory variables
+-include $(GENERATED_DIR)/memory_vars.mk
+# Version 2.0.
+#
+######################################################################
+# Check for sanity to avoid later confusion
+
+ifneq ($(words $(CURDIR)),1)
+ $(error Unsupported: GNU Make cannot build in directories containing spaces, build elsewhere: '$(CURDIR)')
+endif
+
+######################################################################
+
+
+
+# This is intended to be a minimal example.  Before copying this to start a
+# real project, it is better to start with a more complete example,
+# e.g. examples/tracing_c.
+
+# If $VERILATOR_ROOT isn't in the environment, we assume it is part of a
+# package inatall, and verilator is in your path. Otherwise find the
+# binary relative to $VERILATOR_ROOT (such as when inside the git sources).
+# ifeq ($(VERILATOR_ROOT),)
+# VERILATOR = verilator
+# else
+# export VERILATOR_ROOT
+
+# endif
+VERILATOR = /usr/local/bin/verilator
+AXE_ROOT_DEFINE = $(AXE_ROOT)
+RTL_ROOT = $(AXE_ROOT_DEFINE)/soc_frame/rtl
+TOOLS_ROOT = $(AXE_ROOT_DEFINE)/soc_frame/tools
+SOC_FRAME_ROOT = $(AXE_ROOT_DEFINE)/soc_frame
+VERILATOR_FLAGS =
+VERILATOR_FLAGS += -cc --exe --autoflush
+
+# Include paths for file resolution (industry standard)
+# Add project root for test.hex and other top-level files
+VERILATOR_FLAGS += -I$(AXE_ROOT)
+# Add tools directory for routing tables and configs  
+VERILATOR_FLAGS += -I$(RTL_ROOT)  -I$(TOOLS_ROOT) -I$(SOC_FRAME_ROOT)
+# Add routing table subdirectory
+VERILATOR_FLAGS += -I$(TOOLS_ROOT)/Routing_Table
+
+
+# used to dump large arrays
+#VERILATOR_FLAGS += --trace --trace-depth 99
+#VERILATOR_FLAGS += --trace-max-array 8192
+
+# Disable fatal exit on warnings
+# pico causes some warnings and this is needed so the warnings don't cause an
+# exit
+VERILATOR_FLAGS += -Wno-fatal
+
+# adding a directory
+VERILATOR_FLAGS += -y ../../rtl/noc/noc_connect_2x2_16
+VERILATOR_FLAGS += -y ../../rtl/file_io_detector
+VERILATOR_FLAGS += -I../../rtl
+VERILATOR_FLAGS += -I$(GENERATED_DIR)  -CFLAGS -I$(GENERATED_DIR) -CFLAGS -O3   # Include generated memory layout files + high optimization
+VERILATOR_FLAGS += -DPCPI_COUNT   # Enable PCPI counting (commented out for now)
+
+
+VERILATOR_FLAGS += # --stats #--trace #-g --debug 
+
+######################################################################
+# 
+# rtl
+# 
+######################################################################
+
+.PHONY: compile run wave clean test-paths
+
+default: compile wave
+
+obj_dir/Vtop:
+	# echo $(VERILATOR) $(VERILATOR_FLAGS) top.sv sim_main.cpp  $(CXXFLAGS)
+	$(VERILATOR) $(VERILATOR_FLAGS) top.sv sim_main.cpp /usr/local/share/verilator/include/verilated.cpp  /usr/local/share/verilator/include/verilated_vcd_c.cpp
+	cp $(TOOLS_ROOT)/Routing_Table/*.hex obj_dir/
+	# cd obj_dir && ./Vtop
+	$(MAKE) -j32 -C obj_dir -f Vtop.mk Vtop VPATH="..:$(AXE_ROOT):$(TOOLS_ROOT)/Routing_Table:usr/local/share/verilator/include" 
+
+compile: obj_dir/Vtop
+
+run: obj_dir/Vtop
+	cd obj_dir && ./Vtop
+
+wave: obj_dir/Vtop
+	cd obj_dir && ./Vtop #+trace
+	gtkwave logs/vlt_dump.vcd --script=../gtkwave.tcl
+
+clean:
+	-rm -rf logs obj_dir *.log *.dmp *.vpd core
+
+# Test hex file path resolution
+test-paths:
+	@echo "Testing hex file path resolution..."
+	@cd $(AXE_ROOT) && python3 test_hex_paths.py
+
+

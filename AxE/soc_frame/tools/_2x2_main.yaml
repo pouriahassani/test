@@ -1,0 +1,108 @@
+# AxE Configuration - 2x2 Mesh System with Approximate Computing
+# Modern YAML format for better readability and maintainability
+
+# Controller Configuration
+controller:
+  # Controller type selection
+  name: thesis_edh  # Options: scheduler, thesis, thesis_edh
+  
+  # Power management settings
+  save_mode_at: 100000000
+  start_charging_at: -1  # -1 disables charging simulation
+  stop_charging_at: -1   # -1 disables charging simulation
+  
+  # Alternative charging scenarios (commented out)
+  # start_charging_at: 3218725
+  # stop_charging_at: 4218725
+
+# System Architecture Configuration  
+system:
+  # System topology selection
+  name: 2x2_16_priority_input_approx
+  
+  # Alternative system configurations:
+  # name: mult_noc_interface
+  # name: mult_noc_interface_vivado
+  # name: 2x2_16_priority_input
+  # name: 3x3_16_priority_input
+  # name: 4x4_16_priority_input
+  # name: 4x5_16_priority_input
+  
+  # Supported architectures list
+  architectures:
+    - rv32im  # RISC-V 32-bit with integer multiplication
+    # - rv32i   # RISC-V 32-bit integer only
+  
+  # Node architecture mapping (determines number of nodes)
+  # Each entry specifies the architecture for that node ID
+  node_architectures:
+    - im  # Node 0: Integer + Multiplication
+    
+  # Alternative node configurations:
+  # node_architectures:
+  #   - i   # Node 0: Integer only
+  #   - im  # Node 1: Integer + Multiplication
+  
+  # Large mesh example (4x4):
+  # node_architectures: [i, i, i, i, i, i, i, i, im, im, im, im, im, im, im, im]
+
+# Execution Configuration
+run:
+  # Execution mode selection
+  mode: prgs  # Options: prgs (programs), tasks (generated tasks)
+  
+  # Timing configuration
+  # The timing estimation multiplier for execution intervals
+  exec_interval_modifier: 1.0
+
+# Program Configuration (when run.mode = prgs)
+programs:
+  # List of programs to execute
+  program_list:
+    - mul
+    
+  # Additional programs available:
+  # - tridiagonal
+  # - fft
+  # - matrix_multiply
+  # - image_processing
+
+# Task Generation Configuration (when run.mode = tasks)
+tasks:
+  # Number of tasks to generate
+  count: 3
+  
+  # Loop count range for generated tasks
+  loop_count:
+    min: 1000
+    max: 1000
+  
+  # Multiplication percentage in generated tasks
+  multiplication_percentage:
+    min: 50
+    max: 50
+    
+  # Alternative multiplication percentage scenarios:
+  # min: 45, max: 63
+  # min: 80, max: 95
+
+# Simulation Configuration
+simulation:
+  # Simulator arguments
+  arguments: []  # Empty for normal simulation
+  # arguments: ["+trace"]  # Enable tracing
+  
+  # Output control
+  print_output: true
+  # print_output: false  # For SIM_RETURN_OUTPUT mode
+
+# Documentation and Comments
+metadata:
+  description: "2x2 mesh NoC with approximate computing cores"
+  version: "1.0"
+  created_by: "AxE Configuration System"
+  notes:
+    - "This configuration enables approximate computing research"
+    - "The system uses heterogeneous exact/approximate cores"
+    - "Energy harvesting simulation is disabled (charging_at = -1)"
+    - "Single node configuration for testing purposes"

@@ -1,0 +1,187 @@
+# AxE Development Environment - Public Release
+FROM ubuntu:25.04
+
+# =============================================================================
+# ENVIRONMENT SETUP - UNIFIED WORKSPACE
+# =============================================================================
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Use /home/axe as single workspace
+ENV USERNAME=axe
+ENV USER_UID=1001
+ENV USER_GID=1001
+ENV HOME=/home/axe
+ENV WORKDIR=/home/axe
+
+# =============================================================================
+# SYSTEM PACKAGES FOR AxE DEVELOPMENT
+# =============================================================================
+
+RUN apt-get update && apt-get install -y \
+    # Build essentials
+    build-essential gcc-15 g++-15 cmake \
+    # Development tools
+    git curl wget unzip pkg-config \
+    python3 python3-pip python3-venv python3-dev \
+    # RISC-V toolchain dependencies
+    autoconf automake autotools-dev libmpc-dev libmpfr-dev libgmp-dev \
+    gawk bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev \
+    # Verilator dependencies
+    ninja-build perl make g++ ccache libfl2 libfl-dev zlib1g zlib1g-dev \
+    libtcmalloc-minimal4 numactl perl-doc help2man \
+    # CLI tools
+    vim nano htop tree jq sudo lsb-release software-properties-common ca-certificates gnupg \
+    # VSCode integration requirements
+    openssh-client procps psmisc gnupg2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# =============================================================================
+# USER SETUP - FIXED FOR /home/axe
+# =============================================================================
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m -s /bin/bash $USERNAME \
+    && usermod -aG sudo $USERNAME \
+    && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Create RISC-V directory and fix home permissions
+RUN mkdir -p /opt/riscv && chown $USERNAME:$USERNAME /opt/riscv && \
+    chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+# Switch to axe user
+USER $USERNAME
+WORKDIR $WORKDIR
+
+# =============================================================================
+# RISC-V TOOLCHAIN
+# =============================================================================
+
+RUN git clone --depth=1 --branch=2025.06.13 \
+    https://github.com/riscv-collab/riscv-gnu-toolchain.git riscv-gnu-toolchain
+
+RUN cd riscv-gnu-toolchain && mkdir build-rv32im && cd build-rv32im && \
+    ../configure --prefix=/opt/riscv --with-arch=rv32im --with-abi=ilp32 \
+    --enable-multilib --disable-linux && \
+    make newlib -j$(nproc) && cd ../.. && rm -rf riscv-gnu-toolchain
+
+# =============================================================================
+# VERILATOR
+# =============================================================================
+
+RUN git clone --depth=1 --branch=stable \
+    https://github.com/verilator/verilator.git verilator-src && \
+    cd verilator-src && autoconf && \
+    ./configure --prefix=$WORKDIR/verilator && \
+    make -j$(nproc) && make install && cd .. && rm -rf verilator-src
+
+# =============================================================================
+# PYTHON ENVIRONMENT
+# =============================================================================
+
+RUN python3 -m pip install --user --upgrade pip --break-system-packages
+
+RUN pip3 install --user --no-cache-dir --break-system-packages \
+    numpy matplotlib pandas scipy pytest black pylint mypy flake8 ruff \
+    jupyterlab seaborn click pyyaml tqdm rich typer \
+    autopep8 pycodestyle pydocstyle rope bandit jupyter ipykernel
+
+# =============================================================================
+# COLORFUL TERMINAL TOOLS (ADDED AFTER HEAVY BUILDS)
+# =============================================================================
+
+# Install colorful terminal tools for better development experience
+RUN sudo apt-get update && \
+    sudo apt-get install -y \
+    grc colordiff lolcat bat ripgrep \
+    multitail tmux screen && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+# =============================================================================
+# ENVIRONMENT & SHELL SETUP WITH COLORS
+# =============================================================================
+
+ENV PATH="/opt/riscv/bin:$WORKDIR/verilator/bin:$HOME/.local/bin:$PATH"
+ENV VERILATOR_ROOT="$WORKDIR/verilator"
+ENV RISCV="/opt/riscv"
+
+# Enhanced bash configuration with comprehensive colorization
+RUN echo '# AxE Development Environment with Colorful Terminal' >> ~/.bashrc && \
+    echo 'export PS1="\\[\\033[01;32m\\]axe@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\[\\033[01;33m\\]⚡\\[\\033[00m\\]\\$ "' >> ~/.bashrc && \
+    echo 'export TERM=xterm-256color' >> ~/.bashrc && \
+    echo 'export CLICOLOR=1' >> ~/.bashrc && \
+    echo 'export LSCOLORS=ExFxBxDxCxegedabagacad' >> ~/.bashrc && \
+    echo 'export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;33:ex=1;32:bd=1;33:cd=1;33:su=1;31:sg=1;31:tw=1;34:ow=1;34"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Color definitions for scripts and output' >> ~/.bashrc && \
+    echo 'export RED="\\033[0;31m"' >> ~/.bashrc && \
+    echo 'export GREEN="\\033[0;32m"' >> ~/.bashrc && \
+    echo 'export YELLOW="\\033[1;33m"' >> ~/.bashrc && \
+    echo 'export BLUE="\\033[0;34m"' >> ~/.bashrc && \
+    echo 'export PURPLE="\\033[0;35m"' >> ~/.bashrc && \
+    echo 'export CYAN="\\033[0;36m"' >> ~/.bashrc && \
+    echo 'export WHITE="\\033[1;37m"' >> ~/.bashrc && \
+    echo 'export NC="\\033[0m"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Colorful basic commands' >> ~/.bashrc && \
+    echo 'alias ll="ls -la --color=auto"' >> ~/.bashrc && \
+    echo 'alias la="ls -A --color=auto"' >> ~/.bashrc && \
+    echo 'alias ls="ls --color=auto"' >> ~/.bashrc && \
+    echo 'alias grep="grep --color=auto"' >> ~/.bashrc && \
+    echo 'alias fgrep="fgrep --color=auto"' >> ~/.bashrc && \
+    echo 'alias egrep="egrep --color=auto"' >> ~/.bashrc && \
+    echo 'alias diff="colordiff"' >> ~/.bashrc && \
+    echo 'alias cat="bat --paging=never --style=plain"' >> ~/.bashrc && \
+    echo 'alias less="bat --paging=always"' >> ~/.bashrc && \
+    echo 'alias python="python3"' >> ~/.bashrc && \
+    echo 'alias pip="pip3"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Git with enhanced colors' >> ~/.bashrc && \
+    echo 'alias gst="git status --short --branch"' >> ~/.bashrc && \
+    echo 'alias glog="git log --oneline --graph --decorate --color=always"' >> ~/.bashrc && \
+    echo 'alias gdiff="git diff --color=always"' >> ~/.bashrc && \
+    echo 'alias gadd="git add -v"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Build tools with color output' >> ~/.bashrc && \
+    echo 'alias make="grc --colour=auto make"' >> ~/.bashrc && \
+    echo 'alias gcc="grc --colour=auto gcc"' >> ~/.bashrc && \
+    echo 'alias g++="grc --colour=auto g++"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# AxE specific colorful shortcuts' >> ~/.bashrc && \
+    echo 'alias axe-build="echo -e \"\\${CYAN}🔨 Building AxE Hardware...\\${NC}\" && cd soc_frame && grc --colour=auto make"' >> ~/.bashrc && \
+    echo 'alias axe-sw="echo -e \"\\${GREEN}💻 Building AxE Software...\\${NC}\" && cd soc_frame && grc --colour=auto make sw"' >> ~/.bashrc && \
+    echo 'alias axe-sim="echo -e \"\\${PURPLE}⚡ Running AxE Simulation...\\${NC}\" && cd soc_frame && grc --colour=auto make simulate"' >> ~/.bashrc && \
+    echo 'alias axe-analyze="echo -e \"\\${YELLOW}📊 Running AxE Analysis...\\${NC}\" && cd Complete_partitioning && python3 main.py"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Colorful utility functions' >> ~/.bashrc && \
+    echo 'status() { echo -e "\\${CYAN}[INFO]\\${NC} $*"; }' >> ~/.bashrc && \
+    echo 'success() { echo -e "\\${GREEN}[SUCCESS]\\${NC} $*"; }' >> ~/.bashrc && \
+    echo 'warning() { echo -e "\\${YELLOW}[WARNING]\\${NC} $*"; }' >> ~/.bashrc && \
+    echo 'error() { echo -e "\\${RED}[ERROR]\\${NC} $*"; }' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Log viewing with colors' >> ~/.bashrc && \
+    echo 'alias taillog="grc --colour=auto tail -f"' >> ~/.bashrc && \
+    echo 'alias watchlog="multitail"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo 'export PATH="/opt/riscv/bin:$WORKDIR/verilator/bin:$HOME/.local/bin:$PATH"' >> ~/.bashrc && \
+    echo 'export VERILATOR_ROOT="$WORKDIR/verilator"' >> ~/.bashrc && \
+    echo 'export RISCV="/opt/riscv"' >> ~/.bashrc
+
+# Create version check script
+RUN echo '#!/bin/bash' > check_versions.sh && \
+    echo 'echo "=== AxE Environment (2025) ==="' >> check_versions.sh && \
+    echo 'echo "Ubuntu: $(lsb_release -d | cut -f2)"' >> check_versions.sh && \
+    echo 'echo "Python: $(python3 --version)"' >> check_versions.sh && \
+    echo 'echo "RISC-V GCC: $(riscv32-unknown-elf-gcc --version 2>/dev/null | head -1 || echo \"Not found\")"' >> check_versions.sh && \
+    echo 'echo "Verilator: $(verilator --version 2>/dev/null || echo \"Not found\")"' >> check_versions.sh && \
+    echo 'echo "Working Directory: $PWD"' >> check_versions.sh && \
+    chmod +x check_versions.sh
+
+# Welcome message
+RUN echo 'echo ""' >> ~/.bashrc && \
+    echo 'echo -e "\\033[1;36m🚀 AxE Development Environment Ready!\\033[0m"' >> ~/.bashrc && \
+    echo 'echo -e "\\033[0;32m   💡 Commands: axe-build | axe-sw | axe-sim | ./check_versions.sh\\033[0m"' >> ~/.bashrc && \
+    echo 'echo ""' >> ~/.bashrc
+
+CMD ["/bin/bash", "-l"]

@@ -1,0 +1,72 @@
+
+CC = /opt/riscv/bin/riscv32-unknown-elf-gcc
+CC_DESKTOP = gcc
+
+SMALL = rv32i
+BIG = rv32im
+export AXE_ROOT := $(shell pwd | sed 's|/soc_frame.*||')
+export SOC_FRAME_ROOT := $(AXE_ROOT)/soc_frame
+
+LIBS = ../../_libs
+#~ PROG = ./square_mmult/
+
+# Generated memory configuration
+GENERATED_DIR = $(SOC_FRAME_ROOT)/generated
+-include $(GENERATED_DIR)/memory_vars.mk
+
+# Include paths - add generated memory layout headers
+INC = -I$(LIBS) -I$(GENERATED_DIR)
+
+# CFLAGS
+# STACK_POINTER now comes from generated/memory_vars.mk
+LINKEDLIBS += 
+OPT = O0
+WARN = Wall
+
+OTHER = -pedantic -ffreestanding -fstack-usage
+
+CFLAGS += -u _printf_float -$(WARN) -$(OPT) $(OTHER) $(INC)
+#~ CFLAGS = -$(WARN) $(OTHER) $(INC)
+
+# LINKER - Use custom memory layout linker script
+LINKER_SCRIPT = $(GENERATED_DIR)/axe_memory_layout.ld
+LINK = -T$(LINKER_SCRIPT) -Wl,-e,my_start
+
+# Simple memory adjustment tool
+SIMPLE_ADJUSTER = $(SOC_FRAME_ROOT)/tools/simple_memory_adjuster.py
+
+.PHONY: clean rv32i rv32im adjust-memory adaptive-build
+
+
+
+
+rv32im: ARCH=$(BIG)
+rv32im: $(ARCH)_main.hex $(ARCH)_code
+
+# Adjust memory layout when build fails
+adjust-memory:
+	@echo "🔧 Adjusting memory layout to larger sizes..."
+	@python3 $(SIMPLE_ADJUSTER)
+
+# Adaptive build - automatically adjusts if build fails
+adaptive-build:
+	@echo "🧠 Adaptive build: trying to build with automatic adjustment if needed..."
+	@$(MAKE) rv32im || (echo "⚠️  Build failed - increasing memory sizes..." && $(MAKE) adjust-memory && echo "🔄 Retrying build..." && $(MAKE) rv32im)
+
+$(ARCH)_code: $(ARCH)_main.elf
+	/opt/riscv/bin/riscv32-unknown-elf-objdump -S ./$(ARCH)_main.elf > $(ARCH)_main.objdump
+	/opt/riscv/bin/riscv32-unknown-elf-objdump -t ./$(ARCH)_main.elf > $(ARCH)_main.objdump_table
+
+
+$(ARCH)_main.hex: $(ARCH)_main.bin
+	python3 /home/axe/workspace/soc_frame/tools/freedom-bin2hex.py --bit-width 32 ./$(ARCH)_main.bin > $(ARCH)_main.hex
+
+$(ARCH)_main.bin: $(ARCH)_main.elf
+	/opt/riscv/bin/riscv32-unknown-elf-objcopy ./$(ARCH)_main.elf -O binary ./$(ARCH)_main.bin
+
+$(ARCH)_main.elf:
+	$(CC) -march=$(ARCH) $(CFLAGS) -nostartfiles -o ./$(ARCH)_main.elf $(LINK) ./sp_nostart.S -DSTACK_POINTER=$(STACK_POINTER) ./start.S $(SRC) $(LINKEDLIBS) 
+#~ 	$(CC) -march=$(ARCH) $(CFLAGS) -nostartfiles -o ./$(ARCH)_main.elf $(LINK) ../sp.S -DSTACK_POINTER=$(STACK_POINTER) ../crt0.o ../start.S $(SRC) ./main.c
+
+clean:
+	rm -f main.elf main.bin main.hex main.map *.objdump *.objdump_table *.su *.o rv32*

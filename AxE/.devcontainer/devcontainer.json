@@ -1,0 +1,54 @@
+{
+    "name": "AxE Development Environment",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": ".."
+    },
+    
+    // FIXED: Workspace mapping to /home/axe (removes /workspace confusion)
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/axe,type=bind",
+    "workspaceFolder": "/home/axe",
+    
+    // Use axe user (non-root)
+    "remoteUser": "axe",
+    
+    // VSCode settings optimized for AxE development
+    "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackPath": "/home/axe/.local/bin/black",
+        "python.linting.pylintPath": "/home/axe/.local/bin/pylint",
+        "files.watcherExclude": {
+            "**/obj_dir/**": true,
+            "**/build/**": true,
+            "**/.git/objects/**": true
+        }
+    },
+    
+    // FIXED: Extensions that work in container environment
+    "extensions": [
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.pylint",
+        "mshr-h.veriloghdl",
+        "ms-vscode.cpptools",
+        "ms-vscode.vscode-json",
+        "eamodio.gitlens",
+        "yzhang.markdown-all-in-one"
+    ],
+    
+    // Port forwarding
+    "forwardPorts": [8888, 3000, 8080],
+    
+    // Post-create command
+    "postCreateCommand": "bash -c 'echo \"🚀 AxE Container Ready!\" && ./check_versions.sh'",
+    
+    // Mount SSH keys and git config from host
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/axe/.ssh,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.gitconfig,target=/home/axe/.gitconfig,type=bind,consistency=cached"
+    ]
+}

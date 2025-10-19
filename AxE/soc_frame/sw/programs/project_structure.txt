@@ -1,0 +1,251 @@
+.
+├── add
+│   ├── main.c
+│   └── Makefile
+├── aes
+│   ├── aes.c
+│   ├── aes.h
+│   ├── main.c
+│   └── Makefile
+├── all_code.txt
+├── audio-codec
+│   ├── main.c
+│   └── Makefile
+├── blowfish
+│   ├── blowfish.c
+│   ├── blowfish.h
+│   ├── main.c
+│   └── Makefile
+├── checkers
+│   ├── consttypes.c
+│   ├── consttypes.h
+│   ├── functions.c
+│   ├── functions.h
+│   ├── main.c
+│   ├── Makefile
+│   ├── test
+│   ├── test0.txt
+│   └── test0-txt.h
+├── c-interp
+│   ├── hello.c
+│   ├── hello-c.h
+│   ├── main.c
+│   ├── Makefile
+│   └── test
+├── cipher
+│   ├── main.c
+│   └── Makefile
+├── contact_all.sh
+├── dhrystone
+│   ├── main.c
+│   └── Makefile
+├── FFT
+│   ├── COMPILE
+│   ├── ddc.h
+│   ├── ddcmath.h
+│   ├── fft
+│   ├── fftmisc.c
+│   ├── fourierf.c
+│   ├── fourier.h
+│   ├── LICENSE
+│   ├── main.c
+│   ├── Makefile
+│   ├── output_small.txt
+│   ├── README
+│   ├── runme_large.sh
+│   └── runme_small.sh
+├── fft-int
+│   ├── main.c
+│   ├── Makefile
+│   └── test
+├── grayscale
+│   ├── input.h
+│   ├── main.c
+│   └── Makefile
+├── kepler
+│   ├── main.c
+│   └── Makefile
+├── loop_0000000F_nop_0000000F
+│   ├── main.c
+│   └── Makefile
+├── Makefile
+├── Makefile_nostart
+├── max-subseq
+│   ├── main.c
+│   └── Makefile
+├── msort
+│   ├── main.c
+│   └── Makefile
+├── mul
+│   ├── main.c
+│   └── Makefile
+├── mul_aprox
+│   ├── main.c
+│   ├── Makefile
+│   └── test
+├── mul_loop_0000000F
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_0000004F
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_000000AF
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_000000FF
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_000004FF
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_00000AFF
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_00000FFF
+│   ├── main.c
+│   └── Makefile
+├── mul_loop_00004FFF
+│   ├── main.c
+│   ├── Makefile
+│   ├── rv32i_fugg
+│   └── rv32i_objdump
+├── mul_loop_0000AFFF
+│   ├── main.c
+│   ├── Makefile
+│   ├── rv32i_fugg
+│   └── rv32i_objdump
+├── mul_loop_0000FFFF
+│   ├── main.c
+│   ├── Makefile
+│   ├── rv32i_fugg
+│   └── rv32i_objdump
+├── natlog
+│   ├── main.c
+│   └── Makefile
+├── norx
+│   ├── main.c
+│   └── Makefile
+├── nr-solver
+│   ├── main.c
+│   └── Makefile
+├── parrondo
+│   ├── main.c
+│   ├── Makefile
+│   └── test
+├── patricia
+│   ├── file2hex.py
+│   ├── input.h
+│   ├── main.c
+│   ├── Makefile
+│   ├── patricia.c
+│   ├── patricia.h
+│   └── small.udp
+├── primes
+│   ├── main.c
+│   └── Makefile
+├── project_structure.txt
+├── qsort
+│   ├── main.c
+│   └── Makefile
+├── rabinkarp-search
+│   ├── main.c
+│   └── Makefile
+├── regex-parser
+│   ├── main.c
+│   └── Makefile
+├── rle-compress
+│   ├── main.c
+│   └── Makefile
+├── sha
+│   ├── file2hex.py
+│   ├── input.asc
+│   ├── input.h
+│   ├── main.c
+│   ├── Makefile
+│   ├── sha.c
+│   ├── sha.h
+│   └── test
+├── sha256
+│   ├── main.c
+│   └── Makefile
+├── sharpen
+│   ├── input.h
+│   ├── main.c
+│   ├── Makefile
+│   └── Makefile_prg
+├── sharpen_test
+│   ├── arch_func.h
+│   ├── arch.h
+│   ├── boolean.h
+│   ├── clk_func.h
+│   ├── controller.h
+│   ├── debug.h
+│   ├── defines.h
+│   ├── energy_harvester.h
+│   ├── fsdaf
+│   ├── globals.h
+│   ├── input_rgb_size2.h
+│   ├── input_rgb_size.h
+│   ├── interval_func.h
+│   ├── main.c
+│   ├── Makefile
+│   ├── Makefile_prg
+│   ├── math_func.h
+│   ├── mpsoc.h
+│   ├── nodes_func.h
+│   ├── nodes.h
+│   ├── partition_func.h
+│   ├── prgs_func.h
+│   ├── prgs.h
+│   ├── queue_func.h
+│   ├── scheduler.h
+│   ├── task_set_func.h
+│   ├── time_func.h
+│   └── typedefs.h
+├── shortest-path
+│   ├── main.c
+│   └── Makefile
+├── skeleton
+│   ├── main.c
+│   └── Makefile
+├── spelt2num
+│   ├── main.c
+│   └── Makefile
+├── spirograph
+│   ├── main.c
+│   └── Makefile
+├── sp_nostart.S
+├── sp.S
+├── square_mmult
+│   ├── main.c
+│   └── Makefile
+├── start.S
+├── strange
+│   ├── main.c
+│   └── Makefile
+├── susan
+│   ├── input_large.h
+│   ├── input_small.h
+│   └── susan.c
+├── tiny-NN
+│   ├── main.c
+│   └── Makefile
+├── topo-sort
+│   ├── main.c
+│   └── Makefile
+├── totient
+│   ├── main.c
+│   └── Makefile
+├── tridiogonal
+│   ├── main.c
+│   ├── Makefile
+│   ├── readme.md
+│   └── test_matrices.py
+├── vectors-3D
+│   ├── main.c
+│   └── Makefile
+└── weekday
+    ├── main.c
+    └── Makefile
+
+54 directories, 194 files

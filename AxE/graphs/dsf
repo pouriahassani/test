@@ -1,0 +1,21 @@
+   plt.plot(start_exe_80, charge_exe_80, label="E-MPSoC", color = 'r', marker='s', linestyle='--',markersize=3)
+   plt.plot(start_axe_80, charge_axe_80, label=" AxE-F",color = 'g', marker='o', linestyle='-',markersize=3)
+   # # Adding grid lines
+
+   plt.grid(True)
+   plt.xlabel("start_window", fontsize=18)  # Increased font size
+   plt.ylabel("Minimum Charging Rate (P) in mW", fontsize=18)  # Increased font size
+   plt.legend(fontsize=15)  # Increased legend font size
+   plt.xticks(fontsize=12)  # Increase tick font size
+   plt.yticks(fontsize=12)  # Increase tick font size
+
+   charge_diff = 0
+   for idx in range(len(starts_80)):
+      charge_diff += (exe_80[idx] - axe_80[idx])/exe_80[idx]*100
+   
+   print(charge_diff/(len(starts_80)))
+   print(len(charge_axe_80),len(charge_exe_80),len(axe_80))
+   # Adjust layout to prevent overlap
+   # plt.tight_layout()
+   plt.savefig("FULL_partitioning_CHARGE_80.pdf", format="pdf", dpi=300)
+   plt.show()

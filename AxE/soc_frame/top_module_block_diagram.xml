@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2024-10-04T00:00:00.000Z" agent="5.0" version="24.6.4" etag="H1234567890" type="device">
+  <diagram name="AxE SoC Top Module - 2x2_16_priority_input_approx" id="top-module-diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- TOP MODULE BOUNDARY -->
+        <mxCell id="top_module" value="TOP MODULE&#xa;(2x2_16_priority_input_approx)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="1520" height="1080" as="geometry" />
+        </mxCell>
+        
+        <!-- PRIMARY INPUTS -->
+        <mxCell id="input_clk" value="clk" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="120" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="input_res_n" value="res_n" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="160" width="50" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- SIMULATION DEBUG INPUTS -->
+        <mxCell id="sim_inputs" value="Simulation Debug Inputs&#xa;sim_mem_addr[31:0]&#xa;sim_mem_read_en&#xa;sim_mem_write_en&#xa;sim_mem_write_data[31:0]&#xa;sim_file_op_complete_0&#xa;sim_file_op_complete_1&#xa;buffer_recv_busy" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="20" y="220" width="160" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- PRIMARY OUTPUTS -->
+        <mxCell id="output_signals" value="Primary Outputs&#xa;trap&#xa;trap_nodes&#xa;leds_status[7:0]&#xa;triggers[7:0]&#xa;buffer_out_data[6:0]&#xa;buffer_out_valid" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1640" y="120" width="140" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- FILE I/O OUTPUTS -->
+        <mxCell id="file_io_outputs" value="File I/O Debug Outputs&#xa;file_instr_valid_0/1&#xa;file_instruction_0/1[31:0]&#xa;file_reg_a0/1/2_0/1[31:0]&#xa;axi_offset_0/1[31:0]&#xa;current_pc_for_sim[31:0]&#xa;mem_instr_for_sim[31:0]&#xa;debug_file_detect_sim0/1&#xa;req_ack_0/1&#xa;sim_mem_read_data[31:0]&#xa;sim_mem_ready" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1640" y="260" width="180" height="200" as="geometry" />
+        </mxCell>
+        
+        <!-- INTERNAL SIGNALS -->
+        <mxCell id="internal_signals" value="Internal Signals&#xa;w_res_n_syn&#xa;w_ascii_c_0[6:0]&#xa;w_ascii_s_0&#xa;trap_0&#xa;trap_1&#xa;buffer_out_data (synth)&#xa;buffer_out_valid (synth)&#xa;buffer_recv_busy (synth)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="120" y="480" width="160" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- RESET SYNCHRONIZER -->
+        <mxCell id="res_n_syn_inst" value="res_n_syn&#xa;(res_n_syn_inst)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- RING BUFFER -->
+        <mxCell id="ring_buffer_inst" value="ring_buffer&#xa;(ring_buffer_inst)&#xa;&#xa;Parameters:&#xa;DATA_WIDTH=7&#xa;BUFFER_DEPTH=150&#xa;ALLOW_OVERWRITE=0" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="200" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- UART (SYNTHESIS ONLY) -->
+        <mxCell id="uart_inst" value="uart&#xa;(uart_inst)&#xa;&#xa;SYNTHESIS ONLY&#xa;BAUD=921600" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- CONTROLLER -->
+        <mxCell id="controller_inst" value="controller&#xa;(controller_inst)&#xa;&#xa;Parameters:&#xa;ID=0&#xa;SEND_TO=NOC_MEM_ADDR" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="520" y="120" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- NODE 0 -->
+        <mxCell id="node_0" value="node&#xa;(node_0)&#xa;&#xa;Parameters:&#xa;ID=0&#xa;SEND_TO=NOC_MEM_ADDR&#xa;BIG=`N0_ARCH" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="520" y="240" width="140" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- NODE 1 -->
+        <mxCell id="node_1" value="node&#xa;(node_1)&#xa;&#xa;Parameters:&#xa;ID=1&#xa;SEND_TO=NOC_MEM_ADDR&#xa;BIG=`N1_ARCH" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="520" y="380" width="140" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- MEMORY CONTROLLER -->
+        <mxCell id="memory_controller_inst" value="memory_controller&#xa;(memory_controller_inst)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="780" y="280" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- NOC -->
+        <mxCell id="noc_inst" value="if_wrapper_noc_2x2_16&#xa;(if_wrapper_noc_2x2_16_inst)&#xa;&#xa;2x2 NoC Mesh Topology" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="200" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- NOC INTERFACES -->
+        <mxCell id="if_connect_interfaces" value="NoC Interfaces&#xa;&#xa;if_connect_node_0&#xa;if_connect_node_1&#xa;if_connect_memory&#xa;if_connect_node_empty&#xa;&#xa;if_axi_light_controller" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="780" y="120" width="160" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- COMMENTED NODES (2-23) -->
+        <mxCell id="commented_nodes" value="Commented Nodes&#xa;(node_2 to node_23)&#xa;&#xa;Available for expansion&#xa;to larger mesh topologies" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="520" width="140" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- CONNECTION ARROWS -->
+        
+        <!-- Clock and Reset Connections -->
+        <mxCell id="clk_connection" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="input_clk" target="res_n_syn_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="80" y="135" as="sourcePoint" />
+            <mxPoint x="320" y="135" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="res_n_connection" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="input_res_n" target="res_n_syn_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="80" y="175" as="sourcePoint" />
+            <mxPoint x="320" y="165" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Reset Sync to Components -->
+        <mxCell id="sync_reset_to_components" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="res_n_syn_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="150" as="sourcePoint" />
+            <mxPoint x="500" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Controller to AXI Interface -->
+        <mxCell id="controller_to_axi" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="controller_inst" target="if_connect_interfaces">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="660" y="170" as="sourcePoint" />
+            <mxPoint x="780" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Controller to Ring Buffer (Debug) -->
+        <mxCell id="controller_to_ring_buffer" style="endArrow=classic;html=1;exitX=0;exitY=0.8;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="controller_inst" target="ring_buffer_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="200" as="sourcePoint" />
+            <mxPoint x="460" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Nodes to NoC Interfaces -->
+        <mxCell id="node0_to_noc" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_0" target="if_connect_interfaces">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="660" y="300" as="sourcePoint" />
+            <mxPoint x="780" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="node1_to_noc" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.8;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_1" target="if_connect_interfaces">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="660" y="440" as="sourcePoint" />
+            <mxPoint x="780" y="232" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Memory Controller Connections -->
+        <mxCell id="memory_to_axi" style="endArrow=classic;html=1;exitX=0;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="memory_controller_inst" target="if_connect_interfaces">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="304" as="sourcePoint" />
+            <mxPoint x="720" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="memory_to_noc" style="endArrow=classic;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;exitDy=0;" edge="1" parent="1" source="memory_controller_inst" target="noc_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="940" y="336" as="sourcePoint" />
+            <mxPoint x="1000" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- NoC Interfaces to NoC -->
+        <mxCell id="interfaces_to_noc" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="if_connect_interfaces" target="noc_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="940" y="190" as="sourcePoint" />
+            <mxPoint x="1000" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- File I/O Connections from Nodes -->
+        <mxCell id="node0_file_io" style="endArrow=classic;html=1;exitX=1;exitY=0.8;exitDx=0;exitDy=0;" edge="1" parent="1" source="node_0">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="660" y="336" as="sourcePoint" />
+            <mxPoint x="1640" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="node1_file_io" style="endArrow=classic;html=1;exitX=1;exitY=0.8;exitDx=0;exitDy=0;" edge="1" parent="1" source="node_1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="660" y="476" as="sourcePoint" />
+            <mxPoint x="1640" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Memory Controller to Output -->
+        <mxCell id="memory_to_outputs" style="endArrow=classic;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;" edge="1" parent="1" source="memory_controller_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="940" y="304" as="sourcePoint" />
+            <mxPoint x="1640" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Ring Buffer to Output -->
+        <mxCell id="ring_buffer_to_output" style="endArrow=classic;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;" edge="1" parent="1" source="ring_buffer_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="460" y="270" as="sourcePoint" />
+            <mxPoint x="1640" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Simulation Debug Interface -->
+        <mxCell id="sim_to_memory" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.8;entryDx=0;entryDy=0;" edge="1" parent="1" source="sim_inputs" target="memory_controller_inst">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="290" as="sourcePoint" />
+            <mxPoint x="780" y="344" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Trap Signal Combination -->
+        <mxCell id="trap_combination" value="trap_nodes = trap_0 || trap_1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="520" y="660" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Legend -->
+        <mxCell id="legend" value="LEGEND&#xa;&#xa;🟦 Interface/Buffer Modules&#xa;🟨 Control/Processing Modules&#xa;🟥 Memory/NoC Modules&#xa;🟩 I/O/Communication Modules&#xa;⚪ Internal Signals/Interfaces&#xa;--- Synthesis-Only Components" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="400" width="200" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- Parameter Box -->
+        <mxCell id="parameters" value="SYSTEM PARAMETERS&#xa;&#xa;NOC_MEM_ADDR = 2'b10&#xa;(NoC address for memory controller)&#xa;&#xa;ASCII_WIDTH = 7 (from defines)&#xa;&#xa;Architecture Types:&#xa;N0_ARCH = `N0_ARCH (define)&#xa;N1_ARCH = `N1_ARCH (define)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="580" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Signal Descriptions -->
+        <mxCell id="signal_descriptions" value="KEY INTERNAL SIGNALS&#xa;&#xa;w_res_n_syn: Synchronized reset&#xa;w_ascii_c_0[6:0]: ASCII character data&#xa;w_ascii_s_0: ASCII character strobe&#xa;trap_0/1: Trap signals from nodes&#xa;&#xa;NoC Interfaces:&#xa;if_connect_node_0/1: Node NoC connections&#xa;if_connect_memory: Memory NoC connection&#xa;if_connect_node_empty: Empty node slot&#xa;if_axi_light_controller: Controller AXI" style="rounded=1;whiteSpace=wrap;html=1;fontSize=9;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="120" y="640" width="220" height="180" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

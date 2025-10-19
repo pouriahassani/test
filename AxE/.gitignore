@@ -1,0 +1,255 @@
+# AxE Project .gitignore
+# ===================
+# This file tells Git which files and directories to ignore
+# Organized by category for easy maintenance
+
+# =============================================================================
+# IDE and Editor Files
+# =============================================================================
+# Personal development assistant files (not part of AxE project)
+.claude/
+*.claude
+CLAUDE.md
+.claude_*
+claude_context.sh
+claude_code.sh
+ai_context.sh
+setup_personal_tools.sh
+AI_INSTRUCTIONS.md
+todo.sh
+.axe_todos.json
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# IntelliJ/PyCharm
+.idea/
+*.iml
+*.iws
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# Vim npm
+*.swp
+*.swo
+*~
+.netrwhist
+
+# =============================================================================
+# Binary Files and Executables
+# =============================================================================
+# Compiled object files
+*.o
+*.obj
+*.ko
+*.so
+*.so.*
+*.dylib
+*.dll
+*.a
+*.la
+*.lo
+
+# Executables
+*.exe
+*.com
+*.cmd
+*.bat
+*.sh.x
+*.out
+*.app
+
+# RISC-V specific binaries
+*.elf
+*.bin
+*.hex
+rv32i_*
+rv32im_*
+*_main.elf
+*_main.bin
+*_main.hex
+*_objdump
+*_objdump_table
+
+# Stack usage files (GCC generates these)
+*.su
+
+# =============================================================================
+# Build and Compilation Artifacts
+# =============================================================================
+# Build directories
+build/
+obj_*/
+dist/
+target/
+
+# Make
+Makefile.deps
+*.d
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+
+# Autotools
+.deps/
+.libs/
+*.la
+*.lo
+Makefile.in
+aclocal.m4
+autom4te.cache/
+config.h
+config.h.in
+config.log
+config.status
+configure
+depcomp
+install-sh
+missing
+stamp-h1
+
+# =============================================================================
+# Hardware Design Files (Verilator/Simulation)
+# =============================================================================
+# Verilator output
+obj_dir/
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+*.vpd
+*.shm/
+*.fsdb
+logs/
+*.log
+*.dmp
+core
+
+# =============================================================================
+# Software Development Artifacts
+# =============================================================================
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.env
+.venv/
+env/
+venv/
+
+# C/C++
+*.gch
+*.pch
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# =============================================================================
+# AxE Project Specific Files
+# =============================================================================
+# Existing project patterns (preserved from original .gitignore)
+_prgs.json
+_prgs_with_controller.json
+shchexbin.json
+no1
+test.hex
+libgcc
+**/*.RESULTS
+
+# Specific AxE binary patterns
+soc_frame/sw/programs/*/util.su
+soc_frame/sw/programs/*/main.su
+soc_frame/sw/programs/*/memmgr.su
+soc_frame/sw/programs/telecomm/FFT/fft
+soc_frame/sw/programs/telecomm/FFT/*.o
+
+# =============================================================================
+# Development and Testing Files
+# =============================================================================
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =============================================================================
+# Docker and Container Files
+# =============================================================================
+# Don't commit Docker build contexts that might be large
+.docker/
+*.dockerignore.bak
+
+# =============================================================================
+# Documentation Build Artifacts
+# =============================================================================
+# Generated documentation
+docs/_build/
+docs/html/
+docs/latex/
+*.pdf
+
+# =============================================================================
+# Configuration and Secrets
+# =============================================================================
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Configuration files that might contain secrets
+config.local.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# =============================================================================
+# Package Manager Files
+# =============================================================================
+# Node.js (if any JS tools are used)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =============================================================================
+# Version Control
+# =============================================================================
+# Backup files
+*.orig
+*.rej
+
+# Patches
+*.patch
+*.diff

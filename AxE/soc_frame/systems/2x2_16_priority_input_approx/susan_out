@@ -1,0 +1,82 @@
+
+--------------------
+starting 2x2_16
+--------------------
+
+******** 84.161003********
+********  Start executing mibench/automotive/susan on the slave node ********
+SELF_AWARENESS: got program at addr: 01000000
+nodes_busy:          1Starting cycle    264944nodes busy:          0[DEBUG] _sbrk: allocated       1048 bytes for newlib[DEBUG] _sbrk: allocated       1308 bytes for newlib=== AxE SUSAN Image Processing Test ===
+Running SUSAN smoothing...
+[DEBUG] SUSAN main function started
+[DEBUG] get_image function started
+[DEBUG] _sbrk: allocated       4096 bytes for newlib[DEBUG] _sbrk: allocated       4076 bytes for newlibHeader: P5
+[DEBUG] getint function started
+[DEBUG] getint function started
+[DEBUG] getint function started
+[DEBUG] malloc: allocated       7220 bytes[DEBUG] Image loaded successfully
+[DEBUG] Starting smoothing mode
+[DEBUG] Setting up brightness LUT for smoothing
+[DEBUG] setup_brightness_lut function started
+[DEBUG] malloc: allocated        516 bytes[DEBUG] Starting SUSAN smoothing algorithm
+[DEBUG] susan_smoothing function started
+[DEBUG] About to allocate tmp_image
+[DEBUG] Calculating tmp_image size: (76 + 7*2) * (95 + 7*2) = 9810 bytes
+[DEBUG] malloc: allocated       9810 bytes[DEBUG] tmp_image allocation completed
+[DEBUG] About to allocate distance LUT
+[DEBUG] Allocating distance LUT: 15 * 15 = 225 bytes
+[DEBUG] malloc: allocated        225 bytes[DEBUG] Distance LUT allocation completed
+[DEBUG] Smoothing completed successfully
+[DEBUG] Writing output image
+[DEBUG] put_image function started
+[DEBUG] SUSAN main function completed
+Smoothing result: 0
+Running SUSAN edge detection...
+[DEBUG] SUSAN main function started
+[DEBUG] get_image function started
+Header: P5
+[DEBUG] getint function started
+[DEBUG] getint function started
+[DEBUG] getint function started
+[DEBUG] malloc: allocated       7220 bytes[DEBUG] Image loaded successfully
+[DEBUG] Starting edge detection mode
+[DEBUG] Allocating memory for edge response
+[DEBUG] malloc: allocated      28880 bytes[DEBUG] Setting up brightness LUT for edge detection
+[DEBUG] setup_brightness_lut function started
+[DEBUG] malloc: allocated        516 bytes[DEBUG] Running full edge detection mode
+[DEBUG] malloc: allocated       7220 bytes[DEBUG] Using full edge detection
+[DEBUG] susan_edges function started
+[DEBUG] Applying thinning post-processing
+[DEBUG] susan_thin function started
+[DEBUG] Drawing edge results
+[DEBUG] edge_draw function started
+[DEBUG] Edge detection completed successfully
+[DEBUG] Writing output image
+[DEBUG] put_image function started
+[DEBUG] SUSAN main function completed
+Edge detection result: 0
+Running SUSAN corner detection...
+[DEBUG] SUSAN main function started
+[DEBUG] get_image function started
+Header: P5
+[DEBUG] getint function started
+[DEBUG] getint function started
+[DEBUG] getint function started
+[DEBUG] malloc: allocated       7220 bytes[DEBUG] Image loaded successfully
+[DEBUG] Starting corner detection mode
+[DEBUG] Allocating memory for corner response
+[DEBUG] malloc: allocated      28880 bytes[DEBUG] Setting up brightness LUT for corner detection
+[DEBUG] setup_brightness_lut function started
+[DEBUG] malloc: allocated        516 bytes[DEBUG] Running full corner detection
+[DEBUG] susan_corners function started
+[DEBUG] malloc: allocated      28880 bytes[DEBUG] malloc: allocated      28880 bytes[DEBUG] free: deallocating memory[DEBUG] free: deallocating memory[DEBUG] Drawing corner results
+[DEBUG] corner_draw function started
+[DEBUG] Corner detection completed successfully
+[DEBUG] Writing output image
+[DEBUG] put_image function started
+[DEBUG] SUSAN main function completed
+Corner detection result: 0
+=== SUSAN Tests Complete ===
+SELF_AWARENESS: FIN
+Starting cycle 306440376
+******** Finished executing mibench/automotive/susan on the slave node ********

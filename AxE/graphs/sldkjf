@@ -1,0 +1,16 @@
+FFT           & None         & Exact         & 709308.24         & -             & -            & 6533.44       & -             & -         \\ \hline  
+Susan         & Approximate  & Approximate   & 146710.00         & 144603.93     & 2103.07      & 1331.95       & 1268.321      & 63.629    \\ \hline  
+BasicMath     & Exact        & Exact         & 55010             & -             & -            & 506.7         & -             & -         \\ \hline  
+Stringsearch  & None         & None          & 530               & -             & -            & 4.88          & -             & -         \\ \hline  
+CRC32         & None         & None          & 23686             & -             & -            & 218.17        & -             & -         \\ \hline  
+AES           & Exact        & None          & 1651.60           & -             & -            & 15.21         & -             & -         \\ \hline  
+Blowfish      & Exact        & None          & 397.57            & -             & -            & 3.66          & -             & -         \\ \hline  
+Dhrystone     & Exact        & None          & 26.63             & 26.52         & 0.12         & 0.24          & 0.233         & 0.007     \\ \hline  
+Grayscale     & Approximate  & None          & 89.83             & 25.55         & 64.28        & 0.245         & 0.224         & 0.021     \\ \hline  
+Msort         & Exact        & None          & 21.45             & -             & -            & 0.198         & -             & -         \\ \hline  
+Norx          & Exact        & None          & 57.09             & -             & -            & 0.526         & -             & -         \\ \hline  
+Primes        & Exact        & None          & 2.69              & -             & -            & 0.025         & -             & -         \\ \hline  
+Qsort         & Exact        & None          & 26.93             & -             & -            & 0.048         & -             & -         \\ \hline  
+SHA256        & Exact        & None          & 50.50             & -             & -            & 0.465         & -             & -         \\ \hline  
+Sharpen       & Approximate  & None          & 95.57             & 78.07         & 17.50        & 0.719         & 0.685         & 0.034     \\ \hline  
+Square\_mmult & Approximate  & None          & 9.61              & 7.67          & 1.94         & 0.071         & 0.067         & 0.004     \\ \hline 

@@ -1,0 +1,73 @@
+{
+    "name": "AxE Research Platform",
+    "build": {
+        "dockerfile": "../Dockerfile.public",
+        "context": ".."
+    },
+    
+    // Workspace configuration
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/researcher,type=bind",
+    "workspaceFolder": "/home/researcher",
+    
+    // Use non-root user for security
+    "remoteUser": "researcher",
+    
+    // VSCode settings optimized for research development
+    "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "python.linting.flake8Enabled": true,
+        "files.watcherExclude": {
+            "**/obj_dir/**": true,
+            "**/build/**": true,
+            "**/.git/objects/**": true,
+            "**/simulation_results/**": true,
+            "**/synthesis_results/**": true
+        },
+        "files.associations": {
+            "*.v": "verilog",
+            "*.sv": "systemverilog",
+            "*.vh": "verilog"
+        }
+    },
+    
+    // Extensions for AxE development
+    "extensions": [
+        // Python development
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.pylint",
+        "ms-python.flake8",
+        
+        // Hardware development
+        "mshr-h.veriloghdl",
+        "eirikpre.systemverilog",
+        
+        // C/C++ for RISC-V development
+        "ms-vscode.cpptools",
+        
+        // General development tools
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens",
+        "yzhang.markdown-all-in-one",
+        
+        // Documentation and analysis
+        "ms-vscode.hexeditor",
+        "shd101wyy.markdown-preview-enhanced"
+    ],
+    
+    // Port forwarding for Jupyter and web interfaces
+    "forwardPorts": [8888, 8080, 3000],
+    
+    // Container initialization
+    "postCreateCommand": "bash -c 'echo \"🚀 AxE Development Environment Ready!\" && ./check_environment.sh'",
+    
+    // Git integration (mount host git config if available)
+    "mounts": [
+        "source=${localEnv:HOME}/.gitconfig,target=/home/researcher/.gitconfig,type=bind,consistency=cached"
+    ]
+}
